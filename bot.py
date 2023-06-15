@@ -42,7 +42,7 @@ async def main():
     # Добавление задачи в планировщик
     scheduler.add_job(
         func=user_handlers.send_daily_image,
-        trigger=CronTrigger(hour="0", minute="28", second="00", timezone=timezone('Europe/Moscow')),
+        trigger=CronTrigger(hour="9", minute="00", second="00", timezone=timezone('Europe/Moscow')),
         args=[bot, config.tg_bot.chat_id]
     )
     # Запуск планировщика

@@ -1,3 +1,5 @@
+import random
+
 import requests as requests
 from aiogram import Router, Bot
 from aiogram.filters import Command, CommandStart
@@ -37,7 +39,32 @@ async def process_help_command(message: Message):
 
 # Функция, которая будет запускаться по расписанию
 async def send_daily_image(bot: Bot, chat_id: int):
-    await bot.send_message(chat_id, "Hello")
+    start: int = 1000
+    end: int = 1898
+
+    with open('used_img.txt', 'r') as f:
+        used_numbers = f.read().splitlines()
+
+    used_numbers = [int(num) for num in used_numbers]
+
+    if len(used_numbers) <= end - start + 1:
+        # Генерируем число, которое еще не было использовано
+        while True:
+            new_number = random.randint(start, end)
+            if new_number not in used_numbers:
+                break
+    else:
+        with open('used_img.txt', 'w') as f:
+            f.write('')
+        used_numbers = []
+        new_number = random.randint(start, end)
+
+    used_numbers.append(new_number)
+    with open('used_img.txt', 'w') as f:
+        for number in used_numbers:
+            f.write(str(number) + '\n')
+    await bot.send_photo(chat_id=chat_id,
+                         photo=f"https://raw.githubusercontent.com/0niel/happy-new-day/main/images/{new_number}.jpg")
 
 
 @router.message(Command(commands='гороскоп'))
